@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>NodeJS Realtime Chatbox</title>
+    <link href="css/main.css" media="all" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+	<div class="wrapper">
+		<h1>NodeJS Realtime Chatbox</h1>
+
+		<div class="fillInUsername">
+			<p>Fill in your username that you want to use in the chatbox?</p>
+			<form id="fillInUsernameForm">
+				<input size="35" id="username" autocomplete="off" />
+				<input type="submit" id="enterChatbox" value="enter chatbox" />
+			</form>
+		</div>
+		<div class="chatbox">
+
+			<div class="chat"></div>
+			<div class="users">
+				<p>Users in chatbox</p>
+
+				<div class="usersList">
+				</div>
+
+			</div>
+
+			<form id="chatForm">
+				<input size="35" id="message" autocomplete="off" />
+				<input type="submit" id="sendMessage" value="send message" />
+			</form>
+		</div>
+	</div>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="socket.io/socket.io.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
