@@ -10,7 +10,7 @@ My First NodeJS app an realtime ChatBox, username required to enter
 **How to start:**
   * sudo nodejs main.js
 
-How to start this chat as an service:
+**How to start this chat as an service:**
 
   `sudo forever start -l forever.log -o out.log -e err.log -a main.js`
   
