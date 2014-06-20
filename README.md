@@ -19,3 +19,7 @@ My First NodeJS app an realtime ChatBox, username required to enter
 1. When you got problems with ubuntu server because it can't find the node command execute the following line:
 
   `sudo update-alternatives --install /usr/sbin/node node /usr/bin/nodejs 99`
+
+
+**Demo**
+http://dutchprogrammer.nl:9001
