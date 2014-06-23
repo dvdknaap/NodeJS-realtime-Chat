@@ -9,6 +9,8 @@ var express 	= require('express'),
 
 server.listen(serverPort);
 
+console.log('server is running on '+serverPort);
+
 /*
 app.get('/', function (req, res) {
 	res.sendfile(__dirname+'/index.html');
@@ -27,6 +29,15 @@ app.get('*', function (req, res) {
 			return;
 		}
 		
+
+		//Dont let them read this file !!
+		if (url === '/main.js') {
+			res.writeHead(404, {'Content-Type': 'text/html'});
+			res.write('404 file not found');
+			res.end();
+			return;
+		}
+
 		switch (url.split('.').pop()) {
 			case 'css' :
 				res.writeHead(200, {'Content-Type': 'text/css'});
@@ -36,6 +47,18 @@ app.get('*', function (req, res) {
 			break;
 			case 'html' :
 				res.writeHead(200, {'Content-Type': 'text/html'});
+			break;
+			case 'woff' :
+				res.writeHead(200, {'Content-Type': 'application/x-font-woff'});
+			break;
+			case 'ttf' :
+				res.writeHead(200, {'Content-Type': 'application/octet-stream'});
+			break;
+			case 'svg' :
+				res.writeHead(200, {'Content-Type': 'image/svg+xml'});
+			break;
+			case 'eot' :
+				res.writeHead(200, {'Content-Type': 'font/otf'});
 			break;
 			default:
 			console.log('unkown file type');
@@ -54,20 +77,37 @@ io.sockets.on('connection', function (socket) {
 
 	var socketUser = {};
 
-	socket.on('sendMessage', function (message) {
-		io.sockets.emit('newMessage', { 'username' : socketUser['username'], 'message' : message });
+	socket.on('sendMessage', function (data) {
+		var chatDate 	= new Date(),
+			chatHours	= chatDate.getHours(),
+			chatMinutes = chatDate.getMinutes(),
+			sendMessage = { 
+				'fromUsername'  : data.fromUsername, 
+				'toUsername'  : data.toUsername, 
+				'message'   : data.message.toString().replace(/<[^>]*>/g, ''), 
+				'chatTime'  : (chatHours < 10 ? '0'+chatHours:chatMinutes)+':'+(chatMinutes < 10 ? '0'+chatMinutes:chatMinutes),
+				'isPrivate' : data.isPrivate
+			};
+
+		if (data.isPrivate && users[data.toUsername] !== undefined) {
+			users[data.toUsername].emit('newMessage', sendMessage);
+		} else {
+			io.sockets.emit('newMessage', sendMessage);
+		}
 	});
 
 	socket.on('checkUsername', function (username) {
 		var response = {};
 
+		username = username.toString().replace(/<[^>]*>/g, '');
+
 		if (username in users) {
 			response = { 'status' : 'fail', 'username' : username };
 		} else {
-			users[username] = socket;
+			users[username]        = socket;
 			socketUser['username'] = username;
 
-			response        = { 'status' : 'ok', 'username' : username };
+			response = { 'status' : 'ok', 'username' : username };
 		}
 
 		socket.emit('setUsername',  response);
@@ -83,5 +123,3 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('updateUsernames',  Object.keys(users));
 	});
 });
-
-console.log('server is running on '+serverPort);

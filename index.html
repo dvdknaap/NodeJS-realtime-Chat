@@ -2,40 +2,83 @@
 <html>
 <head>
 	<meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>NodeJS Realtime Chatbox</title>
     <link href="css/main.css" media="all" rel="stylesheet" type="text/css" />
+    <!-- Bootstrap -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
 
-	<div class="wrapper">
+	<div class="container">
 		<h1>NodeJS Realtime Chatbox</h1>
 
 		<div class="fillInUsername">
 			<p>Fill in your username that you want to use in the chatbox?</p>
-			<form id="fillInUsernameForm">
-				<input size="35" id="username" autocomplete="off" />
-				<input type="submit" id="enterChatbox" value="enter chatbox" />
+			<div class="usernameError alert alert-danger">Username is already in use</div>
+			<form class="form-inline" id="fillInUsernameForm">
+
+			    <div class="input-group">
+					<input id="username" autocomplete="off" class="form-control" placeholder="Enter username" />
+					<span class="input-group-btn">
+						<button type="submit" id="enterChatbox" class="btn btn-default">enter chatbox</button>
+					</span>
+			    </div>
 			</form>
 		</div>
 		<div class="chatbox">
+			<div class="row">
+			  <div class="col-md-3">
 
-			<div class="chat"></div>
-			<div class="users">
-				<p>Users in chatbox</p>
-
-				<div class="usersList">
+				<div class="panel panel-default">
+				  <div class="panel-heading">Users in chatbox</div>
+				  <div class="panel-body usersList">
+					<ul class="nav nav-pills nav-stacked"></ul>
+				  </div>
 				</div>
 
+			  </div>
+			  <div class="col-md-8">
+			  	<div class="mainChat activeChatBox">
+					<div class="panel panel-default ">
+					  <div class="panel-heading chatBoxTitle">Main chatBox</div>
+					  <div class="panel-body">
+					  	<ul class="chat">
+						</ul>
+					  </div>
+					</div>
+
+					<form class="form-inline chatForm">
+
+					    <div class="input-group">
+					      <input name="message" autocomplete="off" class="sendMessage form-control" />
+					      <span class="input-group-btn">
+					        <button type="submit" id="sendMessage" class="btn btn-default">send message</button>
+					      </span>
+					    </div>
+					</form>
+				</div>
+
+				<div class="privateChats">
+
+				</div>
+			  </div>
 			</div>
 
-			<form id="chatForm">
-				<input size="35" id="message" autocomplete="off" />
-				<input type="submit" id="sendMessage" value="send message" />
-			</form>
 		</div>
 	</div>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="socket.io/socket.io.js"></script>
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="js/main.js"></script>
 </body>
 </html>
