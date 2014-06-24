@@ -23,6 +23,7 @@ body {
 .usersList .nav .active {
 	background-color: #428bca;
 	color: #fff;
+	border: 1px solid #fff;
 }
 .usersList .nav .newMessage {
 	background-color: #5bc0de;
@@ -32,6 +33,14 @@ body {
 .usersList ul li[username], #username, .sendMessage, .backToMainChat {
 	cursor:pointer;
 }
+.usersList .privateMessages {
+	display:none;
+	background-color: #428bca;
+}
+.usersList .privateMessages.show {
+	display:block;
+}
+
 .chatbox {
 	display:none;
 }

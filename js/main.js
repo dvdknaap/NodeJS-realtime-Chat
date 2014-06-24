@@ -28,13 +28,17 @@ jQuery(function ($) {
 	$('body').delegate('.chatForm', 'submit', function (e) {
 		e.preventDefault();
 
-		var chatbox 	= $(e.target).closest('.activeChatBox');
-		var newMessage  = {
-			fromUsername  : myChatUsername, 
-			toUsername  : chatbox.attr('username'), 
-			message:  	 $(e.target).find('input[name="message"]').val(),
-			isPrivate: 	 chatbox.is('.privateChat')
+		var chatbox 	= $(e.target).closest('.activeChatBox'),
+			newMessage  = {
+			fromUsername  	: myChatUsername, 
+			toUsername  	: chatbox.attr('username'), 
+			message 		: $(e.target).find('input[name="message"]').val(),
+			isPrivate		: chatbox.is('.privateChat')
 		};
+
+		if (newMessage.message === '') {
+			return;
+		}
 
 		socket.emit('sendMessage', newMessage);
 
@@ -45,12 +49,13 @@ jQuery(function ($) {
 				chatMinutes = chatDate.getMinutes()
 			;
 
-			newMessage['chatTime']  = (chatHours < 10 ? '0'+chatHours:chatMinutes)+':'+(chatMinutes < 10 ? '0'+chatMinutes:chatMinutes);
-
+			newMessage['chatTime'] = (chatHours < 10 ? '0'+chatHours:chatHours)+':'+(chatMinutes < 10 ? '0'+chatMinutes:chatMinutes);
+			newMessage['uniqueId'] = chatDate.getTime();
 			setNewMessage(newMessage);
 		}
 
 		$(e.target).find('input[name="message"]').val('')
+		$(e.target).closest('.chatForm').find('.sendMessage').focus();	
 	});
 
 	socket.on('setUsername', function (data) {
@@ -72,15 +77,19 @@ jQuery(function ($) {
 			totalUsernames = usernames.length-1;
 
 		$(usernames).each(function (k,v) {
-			$('<li>').addClass(( v === myChatUsername ? 'active' : '')).attr('username', v).text(v).click(function () {
+			var liUsername = $('<li>').addClass(( v === myChatUsername ? 'active' : '')).attr('username', v).text(v).click(function () {
 
 				if ($(this).attr('username') === myChatUsername) {
 					return false;
 				}
 
-				$('.activeChatBox').slideUp();
-
 				var privateChat = $('.privateChat[username="'+v+'"]');
+
+				if (privateChat.hasClass('activeChatBox')) {
+					return false;
+				}
+
+				$('.activeChatBox').slideUp();
 
 				if (privateChat.length === 0) {
 					$('.mainChat').clone().attr('username', v).removeClass('mainChat').addClass('privateChat').appendTo('.privateChats');
@@ -110,7 +119,24 @@ jQuery(function ($) {
 				privateChat.show().addClass('activeChatBox').slideDown(function () {
 					$(this).removeAttr('style').show();
 				});
-			}).appendTo(userList);
+			});
+
+			var privateMessages = $('<span>').addClass('privateMessages badge pull-right');
+
+			privateMessages.appendTo(liUsername);
+			liUsername.appendTo(userList);
+		});
+
+		//Check for unwanted private massages
+		$('.privateChat[username]').each(function (k,v) {
+			if (userList.find('li[username="'+$(this).attr('username')+'"]')) {
+
+				if ($(this).hasClass('activeChatBox') ) {
+					$('.mainChat').addClass('activeChatBox').slideUp();
+				}
+
+				$(this).remove();
+			}
 		});
 	});
 
@@ -131,22 +157,24 @@ jQuery(function ($) {
 		} else if (data.isPrivate && $('.activeChatBox.privateChat[username="'+fromUsername+'"]').length === 0) {
 
 			if (privateChats[fromUsername] === undefined) {
-				privateChats[fromUsername] = { 'messages' : { } };
-
-				privateChats[fromUsername]['messages'] = $.extend(privateChats[fromUsername]['messages'], [ data ] );
+				privateChats[fromUsername] = { 'messages' : [] };
 			}
+
+			privateChats[fromUsername]['messages'] = $.merge(privateChats[fromUsername]['messages'], [ data ] );
 
 			if (privateChats[fromUsername]['interval'] === undefined ) {
 
 				$('.usersList li[username="'+fromUsername+'"]').addClass('newMessage');
 				privateChats[fromUsername]['interval'] = setInterval(function () {
+					$('.usersList li[username="'+fromUsername+'"] .privateMessages').addClass('show').text(Object.keys(privateChats[fromUsername]['messages']).length);
 
 					$('.usersList li[username="'+fromUsername+'"]').toggleClass('newMessage');
 
-					if (privateChats[fromUsername]['messages'].length === 0 || privateChats[fromUsername]['messages'].length === undefined ) {
+					if (Object.keys(privateChats[fromUsername]['messages']).length === 0 ) {
 						clearInterval(privateChats[fromUsername]['interval']);
 						$('.usersList li[username="'+fromUsername+'"]').removeClass('newMessage');
 						delete privateChats[fromUsername];
+						$('.usersList li[username="'+fromUsername+'"] .privateMessages').removeClass('show');
 					}
 				}, 2000);
 			}
@@ -185,10 +213,16 @@ jQuery(function ($) {
 	            '</div>');
 		}
 
-		if (privateChatUsername !== undefined && messageId !== undefined && privateChats[privateChatUsername].messages[messageId] !== undefined) {
+		if (privateChatUsername !== undefined && messageId !== undefined && typeof privateChats[privateChatUsername].messages[messageId] === 'object') {
 			delete privateChats[privateChatUsername].messages[messageId];
+			
+			if ($(privateChats[privateChatUsername].messages).length === 0) {
+				delete privateChats[privateChatUsername];
+			}
 		}
         chatLi.appendTo(appendToDiv)
+
+  		$('.activeChatBox .chat').animate({ scrollTop: $('.activeChatBox .chat')[0].scrollHeight }, 450);
 	}
 	
 });

@@ -7,9 +7,11 @@ var express 	= require('express'),
 	users		= {}
 ;
 
-server.listen(serverPort);
+server.listen(serverPort, function () {
 
-console.log('server is running on '+serverPort);
+	console.log('server is running on '+serverPort);
+});
+
 
 /*
 app.get('/', function (req, res) {
@@ -43,7 +45,7 @@ app.get('*', function (req, res) {
 				res.writeHead(200, {'Content-Type': 'text/css'});
 			break;
 			case 'js' :
-				res.writeHead(200, {'Content-Type': 'text/js'});
+				res.writeHead(200, {'Content-Type': 'text/javascript'});
 			break;
 			case 'html' :
 				res.writeHead(200, {'Content-Type': 'text/html'});
@@ -83,10 +85,11 @@ io.sockets.on('connection', function (socket) {
 			chatMinutes = chatDate.getMinutes(),
 			sendMessage = { 
 				'fromUsername'  : data.fromUsername, 
-				'toUsername'  : data.toUsername, 
-				'message'   : data.message.toString().replace(/<[^>]*>/g, ''), 
-				'chatTime'  : (chatHours < 10 ? '0'+chatHours:chatMinutes)+':'+(chatMinutes < 10 ? '0'+chatMinutes:chatMinutes),
-				'isPrivate' : data.isPrivate
+				'toUsername'  	: data.toUsername, 
+				'message'   	: data.message.toString().replace(/<[^>]*>/g, ''), 
+				'chatTime'  	: (chatHours < 10 ? '0'+chatHours:chatHours)+':'+(chatMinutes < 10 ? '0'+chatMinutes:chatMinutes),
+				'isPrivate' 	: data.isPrivate,
+				'uniqueId'		: new Date().getTime()
 			};
 
 		if (data.isPrivate && users[data.toUsername] !== undefined) {
