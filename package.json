@@ -5,7 +5,7 @@
   },
   "name": "chatbox",
   "description": "NodeJS realtime Chat ====================",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "main": "main.js",
   "devDependencies": {},
   "scripts": {
