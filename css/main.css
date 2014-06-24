@@ -1,6 +1,10 @@
 * {
 	cursor:default;
 }
+body {
+    background-color: #333 !important;
+    color: #fff !important;
+}
 
 .usernameError {
 	display:none;
