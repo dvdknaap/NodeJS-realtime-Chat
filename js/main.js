@@ -98,50 +98,52 @@ jQuery(function ($) {
 				}
 
 				if (privateChats[v] !== undefined ) {
-					console.log(privateChats[v], 'privateChats[v]');
 
-					$.each(privateChats[v].messages, function (k,v) {
-						setNewMessage(v);
+					$.each(privateChats[v].messages, function (key,value) {
+						setNewMessage(value, v, key);
 					});
 				}
 
 				$('.privateChat').hide();
 				$('.activeChatBox').removeClass('activeChatBox');
 
-				privateChat.show().addClass('activeChatBox').slideDown();
+				privateChat.show().addClass('activeChatBox').slideDown(function () {
+					$(this).removeAttr('style').show();
+				});
 			}).appendTo(userList);
 		});
 	});
 
 	socket.on('newMessage', setNewMessage);
 
-	function setNewMessage(data) {
-		console.log(data, 'data');
+	function setNewMessage(data, privateChatUsername, messageId) {
 
 		var fromUsername 	 = data.fromUsername,
 			toUsername 		 = data.toUsername,
 			chatTime 		 = data.chatTime,
 			chatMessage 	 = data.message,
 			chatLi			 = '',
-			appendToDiv		 = (data.isPrivate && $('.privateChat[username="'+(fromUsername === myChatUsername ? toUsername : fromUsername)+'"]').length === 1 ? $('.privateChat[username="'+fromUsername+'"]') : '.mainChat .chat')
+			appendToDiv		 = (data.isPrivate && $('.privateChat[username="'+(fromUsername === myChatUsername ? toUsername : fromUsername)+'"] .chat').length === 1 ? $('.privateChat[username="'+(fromUsername === myChatUsername ? toUsername : fromUsername)+'"] .chat') : '.mainChat .chat')
 		;
 
 		if (data.isPrivate && fromUsername === myChatUsername && $('.activeChatBox.privateChat[username="'+toUsername+'"]').length === 1) {
 			//Just pass
 		} else if (data.isPrivate && $('.activeChatBox.privateChat[username="'+fromUsername+'"]').length === 0) {
+
 			if (privateChats[fromUsername] === undefined) {
 				privateChats[fromUsername] = { 'messages' : { } };
 
-				privateChats[fromUsername]['messages'] = $.merge(privateChats[fromUsername]['messages'], [ data ] );
+				privateChats[fromUsername]['messages'] = $.extend(privateChats[fromUsername]['messages'], [ data ] );
 			}
 
 			if (privateChats[fromUsername]['interval'] === undefined ) {
 
+				$('.usersList li[username="'+fromUsername+'"]').addClass('newMessage');
 				privateChats[fromUsername]['interval'] = setInterval(function () {
 
 					$('.usersList li[username="'+fromUsername+'"]').toggleClass('newMessage');
 
-					if (privateChats[fromUsername]['messages'].length === 0 ) {
+					if (privateChats[fromUsername]['messages'].length === 0 || privateChats[fromUsername]['messages'].length === undefined ) {
 						clearInterval(privateChats[fromUsername]['interval']);
 						$('.usersList li[username="'+fromUsername+'"]').removeClass('newMessage');
 						delete privateChats[fromUsername];
@@ -183,6 +185,9 @@ jQuery(function ($) {
 	            '</div>');
 		}
 
+		if (privateChatUsername !== undefined && messageId !== undefined && privateChats[privateChatUsername].messages[messageId] !== undefined) {
+			delete privateChats[privateChatUsername].messages[messageId];
+		}
         chatLi.appendTo(appendToDiv)
 	}
 	
