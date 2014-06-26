@@ -23,3 +23,6 @@ My First NodeJS app an realtime ChatBox, username required to enter
 
 **Demo**
 http://dutchprogrammer.nl:9001
+
+**Telnet**
+telnet dutchprogrammer.nl 9002
