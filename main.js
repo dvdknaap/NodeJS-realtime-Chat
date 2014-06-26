@@ -4,14 +4,15 @@ var express 	= require('express'),
 	io   		= require('socket.io').listen(server),
 	fs			= require('fs'),
 	serverPort 	= 9001,
-	users		= {}
+    telnetPort  = 9002,
+	users		= {},
+    telnet      = require('./wodan_modules/telnet_console/telnet_console')
 ;
 
 server.listen(serverPort, function () {
-
+    telnet.start(telnetPort);
 	console.log('server is running on '+serverPort);
 });
-
 
 /*
 app.get('/', function (req, res) {
@@ -77,8 +78,9 @@ app.get('*', function (req, res) {
 
 io.sockets.on('connection', function (socket) {
 
-	var socketUser = {};
+    telnet.addIoSocket(socket);
 
+    var socketUser = {};
 	socket.on('sendMessage', function (data) {
 		var chatDate 	= new Date(),
 			chatHours	= chatDate.getHours(),
@@ -123,6 +125,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('disconnect', function (data) {
 		delete users[socketUser['username']];
 		socketUser = {};
+        telnet.removeIoSocket(socket.id);
 		io.sockets.emit('updateUsernames',  Object.keys(users));
 	});
 });

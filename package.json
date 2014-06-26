@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "express": "~4.4.3",
-    "socket.io": "~1.0.5"
+    "socket.io": "~1.0.5",
+    "async": "~0.9.0"
   },
   "name": "chatbox",
   "description": "NodeJS realtime Chat ====================",
