@@ -1,16 +1,17 @@
-var express 	= require('express'),
-	app 		= express(),
-	server 		= require('http').createServer(app),
-	io   		= require('socket.io').listen(server),
-	fs			= require('fs'),
-	serverPort 	= 9001,
-    telnetPort  = 9002,
-	users		= {},
-    telnet      = require('./wodan_modules/telnet_console/telnet_console')
+var express 	 = require('express'),
+	app 		 = express(),
+	server 		 = require('http').createServer(app),
+	io   		 = require('socket.io').listen(server),
+	fs			 = require('fs'),
+	serverPort 	 = 9001,
+    telnetPort   = 9002,
+	users		 = {},
+    telnet       = require('./wodan_modules/telnet_console/telnet_console')
 ;
 
 server.listen(serverPort, function () {
     telnet.start(telnetPort);
+
 	console.log('server is running on '+serverPort);
 });
 
@@ -104,13 +105,14 @@ io.sockets.on('connection', function (socket) {
 	socket.on('checkUsername', function (username) {
 		var response = {};
 
-		username = username.toString().replace(/<[^>]*>/g, '');
+		username 		  = username.toString().replace(/<[^>]*>/g, '').trim();
+		var usernameCheck = username.toLowerCase();
 
-		if (username in users) {
+		if (usernameCheck in users) {
 			response = { 'status' : 'fail', 'username' : username };
 		} else {
-			users[username]        = socket;
-			socketUser['username'] = username;
+			users[usernameCheck]   = socket;
+			socketUser['username'] = usernameCheck;
 
 			response = { 'status' : 'ok', 'username' : username };
 		}

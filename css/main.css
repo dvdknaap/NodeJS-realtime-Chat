@@ -59,7 +59,9 @@ body {
     padding-bottom: 5px;
     border-bottom: 1px dotted #B3A9A9;
 }
-
+.chat li .chatUsername {
+	color:#333;
+}
 .chat li.left .chat-body
 {
     margin-left: 60px;
