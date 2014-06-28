@@ -1,14 +1,32 @@
 # NodeJS realtime Chat #
 * * *
 
-My First NodeJS app an realtime ChatBox, username required to enter
+My First NodeJS app an realtime ChatBox
+* Chatbox is realtime with socket.io
+* Username to enter
+* Flood protection
+* Command line usage: /help
+* RequireJS module
+* Chat can customised by an settings array
+* Private messaging
+* On unreaded privated message(s), the sender in userlist blinks with the amount of unreaded messages
+* On unreaded privated message(s) the document title change to total unreaded message (animated)
 
 **Requirements:**
-  * Express:  `sudo npm install express`
-  * Socket.io: `sudo npm install socket.io`
+  * async
+  * bootstrap
+  * express
+  * jquery
+  * requirejs
+  * socket.io
+  
+
+**Install requirements**
+
+ `sudo npm install`
 
 **How to start:**
-  * sudo nodejs main.js
+  * sudo node main.js
 
 **How to start this chat as an service:**
 
