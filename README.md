@@ -11,6 +11,9 @@ My First NodeJS app an realtime ChatBox
 * Private messaging
 * On unreaded privated message(s), the sender in userlist blinks with the amount of unreaded messages
 * On unreaded privated message(s) the document title change to total unreaded message (animated)
+* Super user mode with telnet
+* Send an messag through telnet to an specific chat member
+* Kick an specific chat user through telnet
 
 **Requirements:**
   * async
@@ -43,4 +46,4 @@ My First NodeJS app an realtime ChatBox
 http://dutchprogrammer.nl:9001
 
 **Telnet**
-telnet dutchprogrammer.nl 9002
+telnet dutchprogrammer.nl 9102
