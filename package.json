@@ -1,13 +1,16 @@
 {
-  "dependencies": {
-    "express": "~4.4.3",
-    "socket.io": "~1.0.5",
-    "async": "~0.9.0"
-  },
-  "name": "chatbox",
-  "description": "NodeJS realtime Chat ====================",
-  "version": "1.0.0",
+  "name": "NodeJS-realtime-Chat",
+  "version": "1.5.0",
+  "description": "NodeJS Realtime Chatbox",
   "main": "main.js",
+  "dependencies": {
+    "async": "~0.9.0",
+    "bootstrap": "~3.2.0",
+    "express": "~4.4.5",
+    "jquery": "~2.1.1",
+    "requirejs": "~2.1.14",
+    "socket.io": "~1.0.6"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,9 +23,12 @@
     "nodejs",
     "chatbox",
     "chat",
-    "realtime"
+    "realtime",
+    "commands",
+    "flooding",
+    "protection"
   ],
-  "author": "Danny van der Knaap",
+  "author": "Danny van der Knaap & Lars van der Schans",
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/DutchProgrammer/NodeJS-realtime-Chat/issues"

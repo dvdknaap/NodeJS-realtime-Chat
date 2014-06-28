@@ -24,7 +24,8 @@ define( ['socketio'], function (io) {
 				sendMessage: '.sendMessage',
 				usernameError: '.usernameError',
 				usersList: '.usersList',
-				floodingMessage: 'You are flooding',
+				floodingMessage: 'You are flooding, type slower',
+				duplicateMessage: 'Duplicate messages, type an differend message',
 				maxFlooding: 5,
 				minimalFloodingTime: 2,
 				commandStart: '/',
@@ -127,14 +128,14 @@ define( ['socketio'], function (io) {
 					$(e.target).find('input[name="message"]').val('')
 					$(e.target).closest(settings.chatForm).find(settings.sendMessage).focus();
 
-					setErrorChatMessage('to fast !');//settings.floodingMessage
+					setErrorChatMessage(settings.floodingMessage);
 					return;
 				} else if (floodTimes >= settings.maxFlooding) {
 
 					$(e.target).find('input[name="message"]').val('')
 					$(e.target).closest(settings.chatForm).find(settings.sendMessage).focus();	
 
-					setErrorChatMessage('Duplicate messages');//settings.floodingMessage);
+					setErrorChatMessage(settings.duplicateMessage);
 					return;
 				} else {
 					lastMessageTime = now;
@@ -174,6 +175,8 @@ define( ['socketio'], function (io) {
 		};
 
 		var setErrorChatMessage = function (errorMessage) {
+			if (errorMessage === undefined) errorMessage = 'Unkown error';
+			
 			var errorMessage = $('<li>').addClass('alert alert-warning').text(errorMessage);
 			$(errorMessage).appendTo(settings.activeChatBox+' '+settings.chatField);
 
