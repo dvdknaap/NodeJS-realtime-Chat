@@ -79,6 +79,11 @@ app.get('*', function (req, res) {
 
 io.sockets.on('connection', function (socket) {
 
+	if (socket.id !== undefined ) {
+		socket.id = 'socketID' + Math.random().toString(16).slice(2);//because socket.id doesnt exists;
+	}
+	console.log(socket.id, 'socketID');
+
     telnet.addIoSocket(socket);
 
     var socketUser = {};
@@ -105,14 +110,24 @@ io.sockets.on('connection', function (socket) {
 	socket.on('checkUsername', function (username) {
 		var response = {};
 
-		username 		  = username.toString().replace(/<[^>]*>/g, '').trim();
-		var usernameCheck = username.toLowerCase();
+		username 		  		= username.toString().replace(/<[^>]*>/g, '').trim();
+		var usernameCheck 		= username.toLowerCase(),
+			alreadyGotUsername  = false
+		;
 
-		if (usernameCheck in users) {
+		for (var username in users) {
+			if (username.toLowerCase() === usernameCheck) {
+				alreadyGotUsername = true;
+			}
+		}
+
+		if (alreadyGotUsername) {
 			response = { 'status' : 'fail', 'username' : username };
 		} else {
-			users[usernameCheck]   = socket;
-			socketUser['username'] = usernameCheck;
+			users[username]        = socket;
+			socketUser['username'] = username;
+
+    		telnet.addUsername(socket, username);
 
 			response = { 'status' : 'ok', 'username' : username };
 		}

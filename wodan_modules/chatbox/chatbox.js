@@ -172,11 +172,13 @@ define( ['socketio'], function (io) {
 			socket.on('setUsername', setUsername);
 			socket.on('updateUsernames', updateUsernames);
 			socket.on('newMessage', this.setNewMessage);
+			socket.on('telnetKickUser', telnetKickUser);
+			socket.on('telnetSetChatMessage', telnetSetChatMessage);
 		};
 
 		var setErrorChatMessage = function (errorMessage) {
 			if (errorMessage === undefined) errorMessage = 'Unkown error';
-			
+
 			var errorMessage = $('<li>').addClass('alert alert-warning').text(errorMessage);
 			$(errorMessage).appendTo(settings.activeChatBox+' '+settings.chatField);
 
@@ -185,7 +187,7 @@ define( ['socketio'], function (io) {
 
 		var setChatMessage = function (msg) {
 			var chatMessage = $('<li>').addClass('alert alert-info').text(msg);
-			$(msg).appendTo(settings.activeChatBox+' '+settings.chatField);
+			$(chatMessage).appendTo(settings.activeChatBox+' '+settings.chatField);
 
 	  		$(settings.activeChatBox+' '+settings.chatField).stop().animate({ scrollTop: $(settings.activeChatBox+' '+settings.chatField)[0].scrollHeight }, 1);
 		};
@@ -453,6 +455,31 @@ define( ['socketio'], function (io) {
 		this.getChatUsername = function() {
 			return myChatUsername;
 		}
+
+		var telnetKickUser = function (params) {
+			var reason = params;
+			delete params[0];
+			delete params[1];
+			params = params.join(' ').trim();
+
+			var message  = 'U have been kicked from the chatbox \n';
+
+			if (params !== '') {
+				message += 'With reason: '+params;
+			}
+
+			alert(message);
+			location.reload(); 
+		};
+
+		var telnetSetChatMessage = function (msg) {
+			var message = msg;
+			delete message[0];
+			delete message[1];
+			message = message.join(' ').trim();
+
+			setChatMessage('Admin: '+message);
+		};
 	};
 
 	return (new chatbox());
