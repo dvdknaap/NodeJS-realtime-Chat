@@ -4,7 +4,7 @@ var express 	 = require('express'),
 	io   		 = require('socket.io').listen(server),
 	fs			 = require('fs'),
 	serverPort 	 = 9001,
-    telnetPort   = 9002,
+    telnetPort   = 9102,
 	users		 = {},
     telnet       = require('./wodan_modules/telnet_console/telnet_console')
 ;
