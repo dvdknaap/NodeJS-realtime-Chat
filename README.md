@@ -37,7 +37,7 @@ How to start
 ----
   
  ```sh
- sudo node main.js
+ sudo node chatbox.js
  ```
 
 How to start this chat as an service:
@@ -45,7 +45,7 @@ How to start this chat as an service:
 
   
  ```sh
- sudo forever start -l forever.log -o out.log -e err.log -a main.js
+ sudo forever start -l forever.log -o out.log -e err.log -a chatbox.js
   ```
   
 Problems and fixes
