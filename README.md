@@ -16,7 +16,7 @@ My First NodeJS app an realtime ChatBox
 - Send an messag through telnet to an specific chat member
 - Kick an specific chat user through telnet
 
-Requirements:
+Requirements
 ----
   - async
   - bootstrap
@@ -33,7 +33,7 @@ Install requirements
  sudo npm install
  ```
 
-How to start:
+How to start
 ----
   
  ```sh
@@ -48,7 +48,7 @@ How to start this chat as an service:
  sudo forever start -l forever.log -o out.log -e err.log -a main.js
   ```
   
-Problems and fixes:
+Problems and fixes
 ----
 
 1. When you got problems with ubuntu server because it can't find the node command execute the following line:
