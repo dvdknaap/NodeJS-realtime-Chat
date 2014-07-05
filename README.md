@@ -2,7 +2,7 @@ NodeJS realtime Chat
 =========
 
 My First NodeJS app an realtime ChatBox
-----
+
 - Chatbox is realtime with socket.io
 - Username to enter
 - Flood protection
